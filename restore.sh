@@ -1,20 +1,27 @@
 #!/bin/bash
-### Enter Pwned DFU mode
-cd ipwndfu
-./ipwndfu -p
-cd ../
+echo "s0meiyoshino v1.2"
+echo "##iPhone3,1 only##"
+echo "Select iOS Version"
+select iOSVer in iPhone3,1_6.1.2_10B146 iPhone3,1_6.1.3_10B329 iPhone3,1_7.0.4_11B554a exit
+do
 
-### get shsh
-if [ -e "iPhone3,1_7.1.2_11D257_Restore.ipsw" ]; then
-echo "getting shsh..."
-ECID="$((./idevicerestore -t iPhone3,1_7.1.2_11D257_Restore.ipsw) | sed -n -e 's/^.*Found ECID //p')"
-mv -v shsh/$ECID-iPhone3,1-7.1.2.shsh shsh/$ECID-iPhone3,1-6.1.3.shsh
-else
-echo "iPhone3,1_7.1.2_11D257_Restore.ipsw does not exist"
+if [ "$iOSVer" = "iPhone3,1_6.1.2_10B146" ]; then
+./bin/restore_10B146.sh
+break
 fi
 
-### Restore
-./idevicerestore -e -w iPhone3,1_6.1.3_10B329_Custom.ipsw
-echo "exploiting..."
-sleep 10s
-echo "Done!"
+if [ "$iOSVer" = "iPhone3,1_6.1.3_10B329" ]; then
+./bin/restore_10B329.sh
+break
+fi
+
+if [ "$iOSVer" = "iPhone3,1_7.0.4_11B554a" ]; then
+./bin/restore_11B554a.sh
+break
+fi
+
+if [ "$iOSVer" = "exit" ]; then
+break
+fi
+
+done

@@ -1,10 +1,11 @@
-<h2>s0meiyoshino v1.0</h2>
-It is a downgrade tool to iOS 6.1.3 that exploited the boot chain of iOS 7.1.2 using @ xerub 's De Rebus Antiquis.<br/>
+<h2>s0meiyoshino v1.1</h2>
+It is a downgrade tool to iOS 6.1.2/3 and iOS 7.0.4 that exploited the boot chain of iOS 7.1.2 using @ xerub 's De Rebus Antiquis.<br/>
 
 Please secure about 10 GB of free space.<br/>
+iOS 6.1.2, 6.1.3, 7.0.4 only<br/>
 
 (1) Download IPSW<br/>
-Download "iPhone3,1_6.1.3_10B329_Restore.ipsw" and "iPhone3,1_7.1.2_11D257_Restore.ipsw" and place it in s0meiyoshino.<br/>
+Download "iPhone3,1_Downgrade.iOS.Ver_[Build]_Restore.ipsw" and "iPhone3,1_7.1.2_11D257_Restore.ipsw" and place it in s0meiyoshino.<br/>
 
 (1) Install packages<br/>
 ./install.sh<br/>
