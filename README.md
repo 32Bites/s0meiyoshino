@@ -1,4 +1,5 @@
 <h2>s0meiyoshino v1.0</h2>
+It is a downgrade tool to iOS 6.1.3 that exploited the boot chain of iOS 7.1.2 using @ xerub 's De Rebus Antiquis.<br/>
 
 Please secure about 10 GB of free space.<br/>
 
