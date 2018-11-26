@@ -1,15 +1,63 @@
 #!/bin/bash
-echo "s0meiyoshino v1.2"
+echo "s0meiyoshino v1.2.1"
 echo "iPhone3,1 only"
 echo "Select iOS Version"
 
 select iOSVer in "iOS 6" "iOS 7" exit
 do
+## if [ "$iOSVer" = "iOS 5" ]; then
+## iOSLIST="6"
+## echo "Select iOS 5.x"
+## select iOSVers in "iOS 5.1.1r"
+## do
+## if [ "$iOSVers" = "iOS 5.1.1r" ]; then
+## ### Patching iBoot-1219.62.15~2
+## iOSVersion="5.1.1_9B208"
+## iOSBuild="9B208"
+## RestoreRamdisk="038-5512-003.dmg"
+## iBoot_Key="6377d34deddf26c9b464f927f18b222be75f1b5547e537742e7dfca305660fea"
+## iBoot_IV="71fe96da25812ff341181ba43546ea4f"
+## Boot_Partition_Patch="000081a: 00200020"
+## break
+## fi
+## done
+## break
+## fi
 if [ "$iOSVer" = "iOS 6" ]; then
 iOSLIST="6"
 echo "Select iOS 6.x"
-select iOSVers in "iOS 6.1.2" "iOS 6.1.3"
+select iOSVers in "iOS 6.0" "iOS 6.0.1" "iOS 6.1" "iOS 6.1.2" "iOS 6.1.3"
 do
+if [ "$iOSVers" = "iOS 6.0" ]; then
+### Patching iBoot-1537.4.18~2
+iOSVersion="6.0_10A403"
+iOSBuild="10A403"
+RestoreRamdisk="038-6451-001.dmg"
+iBoot_Key="838270f668a05a60ff352d8549c06d2f21c3e4f7617c72a78d82c92a3ad3a045"
+iBoot_IV="7891928b9dd0dd919778743a2c8ec6b3"
+Boot_Partition_Patch="0000a6c: 00200020"
+break
+fi
+if [ "$iOSVers" = "iOS 6.0.1" ]; then
+### Patching iBoot-1537.4.21~3
+iOSVersion="6.0.1_10A523"
+iOSBuild="10A523"
+RestoreRamdisk="038-7924-011.dmg"
+iBoot_Key="8d539232c0e906a9f60caa462f189530f745c4abd81a742b4d1ec1cb8b9ca6c3"
+iBoot_IV="44ffe675d6f31167369787a17725d06c"
+Boot_Partition_Patch="0000a6c: 00200020"
+break
+fi
+if [ "$iOSVers" = "iOS 6.1" ]; then
+### Patching iBoot-1537.9.55~4
+iOSVersion="6.1_10B144"
+iOSBuild="10B144"
+RestoreRamdisk="048-0804-001.dmg"
+iBoot_Key="891ed50315763dac51434daeb8543b5975a555fb8388cc578d0f421f833da04d"
+iBoot_IV="4d76b7e25893839cfca478b44ddef3dd"
+Boot_Partition_Patch="0000a6c: 00200020"
+break
+fi
 if [ "$iOSVers" = "iOS 6.1.2" ]; then
 ### Patching iBoot-1537.9.55~4
 iOSVersion="6.1.2_10B146"
