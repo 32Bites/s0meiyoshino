@@ -6,17 +6,20 @@ select iOSVer in iPhone3,1_6.1.2_10B146 iPhone3,1_6.1.3_10B329 iPhone3,1_7.0.4_1
 do
 
 if [ "$iOSVer" = "iPhone3,1_6.1.2_10B146" ]; then
-./bin/restore_10B146.sh
+iOSVersion="6.1.2"
+iOS_IPSW="iPhone3,1_6.1.2_10B146"
 break
 fi
 
 if [ "$iOSVer" = "iPhone3,1_6.1.3_10B329" ]; then
-./bin/restore_10B329.sh
+iOSVersion="6.1.3"
+iOS_IPSW="iPhone3,1_6.1.3_10B329"
 break
 fi
 
 if [ "$iOSVer" = "iPhone3,1_7.0.4_11B554a" ]; then
-./bin/restore_11B554a.sh
+iOSVersion="7.0.4"
+iOS_IPSW="iPhone3,1_7.0.4_11B554a"
 break
 fi
 
@@ -25,3 +28,20 @@ break
 fi
 
 done
+
+cd ipwndfu
+./ipwndfu -p
+cd ../
+
+### get shsh
+if [ -e "iPhone3,1_7.1.2_11D257_Restore.ipsw" ]; then
+echo "getting shsh..."
+ECID="$((./bin/idevicerestore -t iPhone3,1_7.1.2_11D257_Restore.ipsw) | sed -n -e 's/^.*Found ECID //p')"
+mv -v shsh/$ECID-iPhone3,1-7.1.2.shsh shsh/$ECID-iPhone3,1-$iOSVersion.shsh
+else
+echo "iPhone3,1_7.1.2_11D257_Restore.ipsw does not exist"
+fi
+
+### Restore
+./bin/idevicerestore -e -w "$iOS_IPSW"_Custom.ipsw
+echo "Done!"
