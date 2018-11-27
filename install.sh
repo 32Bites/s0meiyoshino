@@ -13,10 +13,6 @@
 
 mkdir shsh
 
-cp -a odysseus/macos/idevicerestore ./bin
-cp -a odysseus/macos/ipsw ./bin
-cp -a odysseus/macos/xpwntool ./bin
-
 fi
 
 if [ -e "iloader" ]; then
