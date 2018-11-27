@@ -13,8 +13,6 @@
 
 mkdir shsh
 
-fi
-
 if [ -e "iloader" ]; then
 echo "iloader already exist"
 else
