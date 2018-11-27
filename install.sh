@@ -1,12 +1,15 @@
 #!/bin/bash
-if [ -e "odysseus" ]; then
-echo "Odysseus already exist"
-else
-wget https://dayt0n.github.io/odysseus/odysseus-0.999.zip
-unzip -d ./ odysseus-0.999.zip
-mv -v odysseus-0.999.0 odysseus
-rm odysseus-0.999.zip
-rm -r __MACOSX
+
+## if [ -e "odysseus" ]; then
+## echo "Odysseus already exist"
+## else
+## wget https://dayt0n.github.io/odysseus/odysseus-0.999.zip
+## unzip -d ./ odysseus-0.999.zip
+## mv -v odysseus-0.999.0 odysseus
+## rm odysseus-0.999.zip
+## rm -r __MACOSX
+
+## ipsw, idevicerestore, xpwntool from "https://www.dropbox.com/s/oakjm4dgmuutsuf/odysseusOTA-v2.4.zip"
 
 mkdir shsh
 

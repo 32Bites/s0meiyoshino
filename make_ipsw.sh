@@ -84,8 +84,38 @@ fi
 if [ "$iOSVer" = "iOS 7" ]; then
 iOSLIST="7"
 echo "Select iOS 7.x"
-select iOSVers in "iOS 7.0.4"
+select iOSVers in "iOS 7.0" "iOS 7.0.2" "iOS 7.0.3" "iOS 7.0.4" "iOS 7.0.6" "iOS 7.1" "iOS 7.1.1"
 do
+if [ "$iOSVers" = "iOS 7.0" ]; then
+### Patching iBoot-1940.1.75~20
+iOSVersion="7.0_11A465"
+iOSBuild="11A465"
+RestoreRamdisk="038-3373-256.dmg"
+iBoot_Key="e1fef31c8aabcdca2a3887ba21c0e2113c41a5617380657ab6a487993b39f9a8"
+iBoot_IV="5bf099d9db5cf1009329e527a378c8be"
+Boot_Partition_Patch="0000a54: 00200020"
+break
+fi
+if [ "$iOSVers" = "iOS 7.0.2" ]; then
+### Patching iBoot-1940.1.75~93
+iOSVersion="7.0.2_11A501"
+iOSBuild="11A501"
+RestoreRamdisk="048-9414-002.dmg"
+iBoot_Key="5cd910c268813cb4008e5b33e01f761c0794ed1437737b4d386727d17fac79d1"
+iBoot_IV="65db9a4e4f64bb79a55d76d98ce1457b"
+Boot_Partition_Patch="0000a54: 00200020"
+break
+fi
+if [ "$iOSVers" = "iOS 7.0.3" ]; then
+### Patching iBoot-1940.3.5~1
+iOSVersion="7.0.3_11B511"
+iOSBuild="11B511"
+RestoreRamdisk="058-0322-002.dmg"
+iBoot_Key="bd56f0886e21f233f519d4db20fd044b9208882a6fb791553a75eb4e0c45bbc5"
+iBoot_IV="7cb97df787dcc6367816b03492b225f9"
+Boot_Partition_Patch="0000a54: 00200020"
+break
+fi
 if [ "$iOSVers" = "iOS 7.0.4" ]; then
 ### Patching iBoot-1940.3.5~1
 iOSVersion="7.0.4_11B554a"
@@ -93,6 +123,36 @@ iOSBuild="11B554a"
 RestoreRamdisk="058-1056-002.dmg"
 iBoot_Key="2a6940252b5cb19b86efb9005cdd5fd713290e573dc760f5a3e05df9e868bb89"
 iBoot_IV="67087ac7f28c77cdf9110356f476540b"
+Boot_Partition_Patch="0000a54: 00200020"
+break
+fi
+if [ "$iOSVers" = "iOS 7.0.6" ]; then
+### Patching iBoot-1940.3.5~1
+iOSVersion="7.0.6_11B651"
+iOSBuild="11B651"
+RestoreRamdisk="058-2320-001.dmg"
+iBoot_Key="d7b5bb9b90f19493449ab17fda63afdb16069ad5b65026bb11b4db223fdd4be1"
+iBoot_IV="12af3a975f0346e89d3a34e73b4e0ae1"
+Boot_Partition_Patch="0000a54: 00200020"
+break
+fi
+if [ "$iOSVers" = "iOS 7.1" ]; then
+### Patching iBoot-1940.10.58~115
+iOSVersion="7.1_11D169"
+iOSBuild="11D169"
+RestoreRamdisk="058-4107-003.dmg"
+iBoot_Key="b68612f21e377bd1f685e9031be159a724e931eff162db245c63b7b692cefa7e"
+iBoot_IV="9fe5b6785126c8fc5787582df9efcf94"
+Boot_Partition_Patch="0000a54: 00200020"
+break
+fi
+if [ "$iOSVers" = "iOS 7.1.1" ]; then
+### Patching iBoot-1940.10.58~122
+iOSVersion="7.1.1_11D201"
+iOSBuild="11D201"
+RestoreRamdisk="058-00093-002.dmg"
+iBoot_Key="c6fbf428e0105ab22b2abaefd20ca22c2084e200f74e8a3b08298a54f8bfe28f"
+iBoot_IV="b110991061d76f74c1fc05ddd7cff540"
 Boot_Partition_Patch="0000a54: 00200020"
 break
 fi
