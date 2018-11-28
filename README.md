@@ -1,9 +1,9 @@
-<h2>s0meiyoshino v1.2.2</h2>
-It is a downgrade tool to iOS 6 and iOS 7 that exploited the boot chain of iOS 7.1.2 using @xerub's De Rebus Antiquis.<br/>
-
+<h2>s0meiyoshino v1.3b</h2>
+It is a downgrade and untethered jailbreak tool to iOS 6 and iOS 7 that exploited the boot chain of iOS 7.1.2 using @xerub's De Rebus Antiquis.<br/>
 Please secure about 10 GB of free space.<br/>
-iOS 6.x and 7.x only<br/>
-
+<br/>
+iOS 6.x and 7.x supported<br/>
+Jailbreak supported only for iOS 6.0, 6.1-6.1.3, 7.0.4<br/>
 (1) Download IPSW<br/>
 Download "iPhone3,1_[Downgrade_iOS_Version]_[Build]_Restore.ipsw" and "iPhone3,1_7.1.2_11D257_Restore.ipsw" and place it in s0meiyoshino.<br/>
 

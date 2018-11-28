@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "s0meiyoshino v1.2.1"
+echo "s0meiyoshino v1.3b"
 echo "iPhone3,1 only"
 echo "Select iOS Version"
 
@@ -180,7 +180,41 @@ fi
 
 if [ -d "tmp_ipsw" ]; then
 rm -r tmp_ipsw
+rm -r FirmwareBundles/*
 fi
+
+echo "Jailbreak?"
+select Jailbreak in Yes No
+do
+if [ "$Jailbreak" = "Yes" ]; then
+## 10A403/10B144/10B146/10B329/11B554a
+if [ "$iOSBuild" = "10A403" ] || [ "$iOSBuild" = "10B144" ] || [ "$iOSBuild" = "10B146" ] || [ "$iOSBuild" = "10B329" ] || [ "$iOSBuild" = "11B554a" ]; then
+JB="enable"
+if [ "$iOSLIST" = "6" ]; then
+JBDATA="src/Cydia.tar"
+fi
+if [ "$iOSLIST" = "7" ]; then
+JBDATA="src/Cydia7.tar"
+fi
+cp -a -v Bundles/JB_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
+else
+## son
+echo "[JB] This version does not support jailbreak."
+JB="disable"
+JBDATA=""
+cp -a -v Bundles/Downgrade_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
+fi
+
+break
+fi
+
+if [ "$Jailbreak" = "No" ]; then
+JB="disable"
+JBDATA=""
+cp -a -v Bundles/Downgrade_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
+break
+fi
+done
 
 mkdir tmp_ipsw
 cd tmp_ipsw
@@ -188,18 +222,37 @@ mv `unzip -j ../iPhone3,1_"$iOSVersion"_Restore.ipsw 'Firmware/all_flash/all_fla
 ../bin/xpwntool iBoot.n90ap.RELEASE.img3 iBoot.n90ap.dec.img3 -k $iBoot_Key -iv $iBoot_IV -decrypt
 ../bin/xpwntool iBoot.n90ap.dec.img3 iBoot.n90ap.dec
 
-echo "Inject BootArgs?"
-select BootArgs in orig verbose
+if [ "$JB" = "enable" ]; then
+echo "Enable verbose boot?"
+select Verbose in Yes No
 do
-if [ "$BootArgs" = "orig" ]; then
-../bin/iBoot32Patcher iBoot.n90ap.dec PwnediBoot.n90ap.dec -r -d
+if [ "$Verbose" = "Yes" ]; then
+../bin/iBoot32Patcher iBoot.n90ap.dec PrePwnediBoot.n90ap.dec -r -d -b "cs_enforcement_disable=1 amfi=0xff -v"
+bspatch PrePwnediBoot.n90ap.dec PwnediBoot.n90ap.dec ../FirmwareBundles/JB_iPhone3,1_"$iOSVersion".bundle/iBoot.n90ap.RELEASE.patch
 break
 fi
-if [ "$BootArgs" = "verbose" ]; then
-../bin/iBoot32Patcher iBoot.n90ap.dec PwnediBoot.n90ap.dec -r -d -b "-v"
+if [ "$Verbose" = "No" ]; then
+../bin/iBoot32Patcher iBoot.n90ap.dec PrePwnediBoot.n90ap.dec -r -d -b "cs_enforcement_disable=1 amfi=0xff"
+bspatch PrePwnediBoot.n90ap.dec PwnediBoot.n90ap.dec ../FirmwareBundles/JB_iPhone3,1_"$iOSVersion".bundle/iBoot.n90ap.RELEASE.patch
 break
 fi
 done
+fi
+
+if [ "$JB" = "disable" ]; then
+echo "Enable verbose boot?"
+select Verbose in Yes No
+do
+if [ "$Verbose" = "Yes" ]; then
+../bin/iBoot32Patcher iBoot.n90ap.dec PwnediBoot.n90ap.dec -r -d -b "-v"
+break
+fi
+if [ "$Verbose" = "No" ]; then
+../bin/iBoot32Patcher iBoot.n90ap.dec PwnediBoot.n90ap.dec -r -d
+break
+fi
+done
+fi
 
 echo "$Boot_Partition_Patch" | xxd -r - PwnediBoot.n90ap.dec
 ../bin/xpwntool PwnediBoot.n90ap.dec PwnediBoot.n90ap.img3 -t iBoot.n90ap.dec.img3
@@ -209,7 +262,7 @@ mv -v PwnediBoot.n90ap.img3 iBEC
 tar -cvf bootloader.tar iBEC
 cd ../
 ### Make custom ipsw by odysseus
-./bin/ipsw iPhone3,1_"$iOSVersion"_Restore.ipsw tmp_ipsw/iPhone3,1_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar
+./bin/ipsw iPhone3,1_"$iOSVersion"_Restore.ipsw tmp_ipsw/iPhone3,1_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar "$JBDATA"
 
 ### Make CFW
 cd tmp_ipsw
@@ -303,3 +356,4 @@ zip ../../iPhone3,1_"$iOSVersion"_Custom.ipsw -r *
 ## clean up
 cd ../../
 rm -r tmp_ipsw
+rm -r FirmwareBundles/*
