@@ -12,6 +12,7 @@
 ## ipsw, idevicerestore, xpwntool from "https://www.dropbox.com/s/oakjm4dgmuutsuf/odysseusOTA-v2.4.zip"
 
 mkdir shsh
+mkdir FirmwareBundles
 
 if [ -e "iloader" ]; then
 echo "iloader already exist"
