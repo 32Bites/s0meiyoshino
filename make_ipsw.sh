@@ -189,17 +189,17 @@ do
 if [ "$Jailbreak" = "Yes" ]; then
 JB="enable"
 if [ "$iOSLIST" = "6" ]; then
-JBDATA="src/Cydia.tar"
+DATA="tmp_ipsw/bootloader.tar src/Cydia.tar"
 fi
 if [ "$iOSLIST" = "7" ]; then
-JBDATA="src/Cydia7.tar"
+DATA="tmp_ipsw/bootloader.tar src/Cydia7.tar"
 fi
 cp -a Bundles/JB_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
 break
 fi
 if [ "$Jailbreak" = "No" ]; then
 JB="disable"
-JBDATA=""
+DATA="tmp_ipsw/bootloader.tar"
 cp -a Bundles/Down_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
 break
 fi
@@ -252,7 +252,7 @@ mv -v PwnediBoot.n90ap.img3 iBEC
 tar -cvf bootloader.tar iBEC
 cd ../
 ### Make custom ipsw by odysseus
-./bin/ipsw iPhone3,1_"$iOSVersion"_Restore.ipsw tmp_ipsw/iPhone3,1_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar "$JBDATA"
+./bin/ipsw iPhone3,1_"$iOSVersion"_Restore.ipsw tmp_ipsw/iPhone3,1_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 "$DATA"
 
 ### Make CFW
 cd tmp_ipsw
