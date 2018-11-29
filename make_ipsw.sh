@@ -200,7 +200,7 @@ fi
 if [ "$Jailbreak" = "No" ]; then
 JB="disable"
 JBDATA=""
-cp -a Bundles/Downgrade_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
+cp -a Bundles/Down_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
 break
 fi
 done
