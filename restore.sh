@@ -1,7 +1,7 @@
 #!/bin/bash
-echo "s0meiyoshino v1.2.1"
+echo "s0meiyoshino v1.3 restore.sh"
 echo "iPhone3,1 only"
-echo "Select iOS Version"
+echo "Select restore iOS version"
 select iOSVer in iPhone3,1_6.0_10A403 iPhone3,1_6.0.1_10A523 iPhone3,1_6.1_10B144 iPhone3,1_6.1.2_10B146 iPhone3,1_6.1.3_10B329 iPhone3,1_7.0_11A465 iPhone3,1_7.0.2_11A501 iPhone3,1_7.0.3_11B511 iPhone3,1_7.0.4_11B554a iPhone3,1_7.0.6_11B651 iPhone3,1_7.1_11D169 iPhone3,1_7.1.1_11D201 exit
 do
 
@@ -84,7 +84,7 @@ break
 fi
 
 if [ "$iOSVer" = "exit" ]; then
-break
+exit
 fi
 
 done

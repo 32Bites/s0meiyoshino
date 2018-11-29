@@ -1,7 +1,7 @@
 #!/bin/bash
-echo "s0meiyoshino v1.3b"
+echo "s0meiyoshino v1.3 make_ipsw.sh"
 echo "iPhone3,1 only"
-echo "Select iOS Version"
+echo "Select downgeade iOS version"
 
 select iOSVer in "iOS 6" "iOS 7" exit
 do
@@ -182,13 +182,11 @@ if [ -d "tmp_ipsw" ]; then
 rm -r tmp_ipsw
 rm -r FirmwareBundles/*
 fi
-
+echo ""
 echo "Jailbreak?"
 select Jailbreak in Yes No
 do
 if [ "$Jailbreak" = "Yes" ]; then
-## 10A403/10B144/10B146/10B329/11B554a
-if [ "$iOSBuild" = "10A403" ] || [ "$iOSBuild" = "10B144" ] || [ "$iOSBuild" = "10B146" ] || [ "$iOSBuild" = "10B329" ] || [ "$iOSBuild" = "11B554a" ]; then
 JB="enable"
 if [ "$iOSLIST" = "6" ]; then
 JBDATA="src/Cydia.tar"
@@ -196,22 +194,13 @@ fi
 if [ "$iOSLIST" = "7" ]; then
 JBDATA="src/Cydia7.tar"
 fi
-cp -a -v Bundles/JB_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
-else
-## son
-echo "[JB] This version does not support jailbreak."
-JB="disable"
-JBDATA=""
-cp -a -v Bundles/Downgrade_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
-fi
-
+cp -a Bundles/JB_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
 break
 fi
-
 if [ "$Jailbreak" = "No" ]; then
 JB="disable"
 JBDATA=""
-cp -a -v Bundles/Downgrade_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
+cp -a Bundles/Downgrade_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
 break
 fi
 done
@@ -221,6 +210,7 @@ cd tmp_ipsw
 mv `unzip -j ../iPhone3,1_"$iOSVersion"_Restore.ipsw 'Firmware/all_flash/all_flash.n90ap.production/iBoot.n90ap.RELEASE.img3' | awk '/inflating/{print $2}'` iBoot.n90ap.RELEASE.img3
 ../bin/xpwntool iBoot.n90ap.RELEASE.img3 iBoot.n90ap.dec.img3 -k $iBoot_Key -iv $iBoot_IV -decrypt
 ../bin/xpwntool iBoot.n90ap.dec.img3 iBoot.n90ap.dec
+echo ""
 
 if [ "$JB" = "enable" ]; then
 echo "Enable verbose boot?"

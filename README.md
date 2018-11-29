@@ -1,23 +1,30 @@
-<h2>s0meiyoshino v1.3b</h2>
+<h2>s0meiyoshino v1.3</h2>
 It is a downgrade and untethered jailbreak tool to iOS 6 and iOS 7 that exploited the boot chain of iOS 7.1.2 using @xerub's De Rebus Antiquis.<br/>
 Please secure about 10 GB of free space.<br/>
 <br/>
-iOS 6.x and 7.x supported<br/>
-Jailbreak supported only for iOS 6.0, 6.1-6.1.3, 7.0.4<br/>
+*Support for untethered downgrade to iOS 6.0-7.1.1 (without shsh)<br/>
+*Support for untethered jailbreak to iOS 6.0-7.1.1<br/>
+Apple File Connection v2 is not included in iOS 7.1.x Jailbreak. <br/>
+So, please install from Cydia.<br/>
+<br/>
 (1) Download IPSW<br/>
-Download "iPhone3,1_[Downgrade_iOS_Version]_[Build]_Restore.ipsw" and "iPhone3,1_7.1.2_11D257_Restore.ipsw" and place it in s0meiyoshino.<br/>
+<a href="https://ipsw.me">ipsw download (https://ipsw.me)</a><br/>
+Prepare firmware you want to downgrade and "iPhone3,1_7.1.2_11D257_Restore.ipsw" and put it in s0meiyoshino.<br/>
 
 (1) Install packages<br/>
 ./install.sh<br/>
 
 (2) make ipsw<br/>
 ./make_ipsw.sh<br/>
+Firmware will be created.<br/>
+Since choices are displayed, please select as necessary.<br/>
 
 (3) Restore iPhone 4<br/>
-Prepare to enter DFU mode<br/>
+First, put in device DFU mode.<br/>
+Then, execute the following.<br/>
 ./restore.sh<br/>
 
-!!! How to delete exploit !!!<br/>
+### How to delete exploit ###<br/>
 This method adds "boot-partition=2" to the nvram variable.<br/>
 Even if you restore it with OFW in iTunes, it will be in recovery mode as it is.<br/>
 
@@ -46,6 +53,8 @@ Roderick W. Smith - for gptfdisk<br/>
 @ShadowLee19 for iBoot patch<br/>
 @JonathanSeals for many tips<br/>
 @Benfxmth for many tips<br/>
+iPhone Dev-Team for iOS 6 jailbreak patch<br/>
+@winocm for opensn0w jailbreak patch<br/>
 @daytonhasty for <a href="https://dayt0n.com/articles/Odysseus/">Odysseus</a><br/>
 @libimobiledev for idevicerestore<br/>
 @planetbeing for xpwn<br/>
