@@ -1,6 +1,16 @@
 #!/bin/bash
-echo "s0meiyoshino v1.3 make_ipsw.sh"
+echo "s0meiyoshino v1.3.1 make_ipsw.sh"
+
 echo "iPhone3,1 only"
+Identifier="iPhone3,1"
+if [ "$Identifier" = "iPhone3,1" ]; then
+InternalName="n90ap"
+SoC="s5l8930x"
+Image="2x~iphone-30pin"
+BaseFWVer="7.1.2"
+BaseFWBuild="11D257"
+fi
+
 echo "Select downgeade iOS version"
 
 select iOSVer in "iOS 6" "iOS 7" exit
@@ -164,17 +174,17 @@ exit
 fi
 done
 
-if [ -e "iPhone3,1_"$iOSVersion"_Restore.ipsw" ]; then
-echo "iPhone3,1_"$iOSVersion"_Restore.ipsw OK"
+if [ -e ""$Identifier"_"$iOSVersion"_Restore.ipsw" ]; then
+echo ""$Identifier"_"$iOSVersion"_Restore.ipsw OK"
 else
-echo "iPhone3,1_"$iOSVersion"_Restore.ipsw does not exist"
+echo ""$Identifier"_"$iOSVersion"_Restore.ipsw does not exist"
 exit
 fi
 
-if [ -e "iPhone3,1_7.1.2_11D257_Restore.ipsw" ]; then
-echo "iPhone3,1_7.1.2_11D257_Restore.ipsw OK"
+if [ -e ""$Identifier"_"$BaseFWVer"_"$BaseFWBuild"_Restore.ipsw" ]; then
+echo ""$Identifier"_"$BaseFWVer"_"$BaseFWBuild"_Restore.ipsw OK"
 else
-echo "iPhone3,1_7.1.2_11D257_Restore.ipsw does not exist"
+echo ""$Identifier"_"$BaseFWVer"_"$BaseFWBuild"_Restore.ipsw does not exist"
 exit
 fi
 
@@ -188,21 +198,21 @@ select Jailbreak in Yes No
 do
 if [ "$Jailbreak" = "Yes" ]; then
 JB="enable"
-cp -a Bundles/JB_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
+cp -a Bundles/JB_"$Identifier"_"$iOSVersion".bundle FirmwareBundles/
 break
 fi
 if [ "$Jailbreak" = "No" ]; then
 JB="disable"
-cp -a Bundles/Down_iPhone3,1_"$iOSVersion".bundle FirmwareBundles/
+cp -a Bundles/Down_"$Identifier"_"$iOSVersion".bundle FirmwareBundles/
 break
 fi
 done
 
 mkdir tmp_ipsw
 cd tmp_ipsw
-mv `unzip -j ../iPhone3,1_"$iOSVersion"_Restore.ipsw 'Firmware/all_flash/all_flash.n90ap.production/iBoot.n90ap.RELEASE.img3' | awk '/inflating/{print $2}'` iBoot.n90ap.RELEASE.img3
-../bin/xpwntool iBoot.n90ap.RELEASE.img3 iBoot.n90ap.dec.img3 -k $iBoot_Key -iv $iBoot_IV -decrypt
-../bin/xpwntool iBoot.n90ap.dec.img3 iBoot.n90ap.dec
+unzip -j ../"$Identifier"_"$iOSVersion"_Restore.ipsw "Firmware/all_flash/all_flash."$InternalName".production/iBoot."$InternalName".RELEASE.img3"
+../bin/xpwntool iBoot."$InternalName".RELEASE.img3 iBoot."$InternalName".dec.img3 -k $iBoot_Key -iv $iBoot_IV -decrypt
+../bin/xpwntool iBoot."$InternalName".dec.img3 iBoot."$InternalName".dec
 echo ""
 
 if [ "$JB" = "enable" ]; then
@@ -210,13 +220,13 @@ echo "Enable verbose boot?"
 select Verbose in Yes No
 do
 if [ "$Verbose" = "Yes" ]; then
-../bin/iBoot32Patcher iBoot.n90ap.dec PrePwnediBoot.n90ap.dec -r -d -b "cs_enforcement_disable=1 amfi=0xff -v"
-bspatch PrePwnediBoot.n90ap.dec PwnediBoot.n90ap.dec ../FirmwareBundles/JB_iPhone3,1_"$iOSVersion".bundle/iBoot.n90ap.RELEASE.patch
+../bin/iBoot32Patcher iBoot."$InternalName".dec PrePwnediBoot."$InternalName".dec -r -d -b "cs_enforcement_disable=1 amfi=0xff -v"
+bspatch PrePwnediBoot."$InternalName".dec PwnediBoot."$InternalName".dec ../FirmwareBundles/JB_"$Identifier"_"$iOSVersion".bundle/iBoot."$InternalName".RELEASE.patch
 break
 fi
 if [ "$Verbose" = "No" ]; then
-../bin/iBoot32Patcher iBoot.n90ap.dec PrePwnediBoot.n90ap.dec -r -d -b "cs_enforcement_disable=1 amfi=0xff"
-bspatch PrePwnediBoot.n90ap.dec PwnediBoot.n90ap.dec ../FirmwareBundles/JB_iPhone3,1_"$iOSVersion".bundle/iBoot.n90ap.RELEASE.patch
+../bin/iBoot32Patcher iBoot."$InternalName".dec PrePwnediBoot."$InternalName".dec -r -d -b "cs_enforcement_disable=1 amfi=0xff"
+bspatch PrePwnediBoot."$InternalName".dec PwnediBoot."$InternalName".dec ../FirmwareBundles/JB_"$Identifier"_"$iOSVersion".bundle/iBoot."$InternalName".RELEASE.patch
 break
 fi
 done
@@ -227,88 +237,98 @@ echo "Enable verbose boot?"
 select Verbose in Yes No
 do
 if [ "$Verbose" = "Yes" ]; then
-../bin/iBoot32Patcher iBoot.n90ap.dec PwnediBoot.n90ap.dec -r -d -b "-v"
+../bin/iBoot32Patcher iBoot."$InternalName".dec PwnediBoot."$InternalName".dec -r -d -b "-v"
 break
 fi
 if [ "$Verbose" = "No" ]; then
-../bin/iBoot32Patcher iBoot.n90ap.dec PwnediBoot.n90ap.dec -r -d
+../bin/iBoot32Patcher iBoot."$InternalName".dec PwnediBoot."$InternalName".dec -r -d
 break
 fi
 done
 fi
 
-echo "$Boot_Partition_Patch" | xxd -r - PwnediBoot.n90ap.dec
-../bin/xpwntool PwnediBoot.n90ap.dec PwnediBoot.n90ap.img3 -t iBoot.n90ap.dec.img3
-echo "0000010: 63656269" | xxd -r - PwnediBoot.n90ap.img3
-echo "0000020: 63656269" | xxd -r - PwnediBoot.n90ap.img3
-mv -v PwnediBoot.n90ap.img3 iBEC
+echo "$Boot_Partition_Patch" | xxd -r - PwnediBoot."$InternalName".dec
+../bin/xpwntool PwnediBoot."$InternalName".dec PwnediBoot."$InternalName".img3 -t iBoot."$InternalName".dec.img3
+echo "0000010: 63656269" | xxd -r - PwnediBoot."$InternalName".img3
+echo "0000020: 63656269" | xxd -r - PwnediBoot."$InternalName".img3
+mv -v PwnediBoot."$InternalName".img3 iBEC
 tar -cvf bootloader.tar iBEC
 cd ../
 ### Make custom ipsw by odysseus
 if [ "$JB" = "enable" ]; then
 if [ "$iOSLIST" = "6" ]; then
-./bin/ipsw iPhone3,1_"$iOSVersion"_Restore.ipsw tmp_ipsw/iPhone3,1_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar src/Cydia.tar
+./bin/ipsw "$Identifier"_"$iOSVersion"_Restore.ipsw tmp_ipsw/"$Identifier"_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar src/Cydia.tar
 fi
 if [ "$iOSLIST" = "7" ]; then
-./bin/ipsw iPhone3,1_"$iOSVersion"_Restore.ipsw tmp_ipsw/iPhone3,1_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar src/Cydia7.tar
+./bin/ipsw "$Identifier"_"$iOSVersion"_Restore.ipsw tmp_ipsw/"$Identifier"_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar src/Cydia7.tar
 fi
 fi
 
 if [ "$JB" = "disable" ]; then
-./bin/ipsw iPhone3,1_"$iOSVersion"_Restore.ipsw tmp_ipsw/iPhone3,1_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar
+./bin/ipsw "$Identifier"_"$iOSVersion"_Restore.ipsw tmp_ipsw/"$Identifier"_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar
+fi
+
+## Confirm existence of firmware
+if [ -e "tmp_ipsw/"$Identifier"_"$iOSVersion"_Odysseus.ipsw" ]; then
+echo "success"
+else
+echo "failed make ipsw"
+exit
 fi
 
 ### Make CFW
 cd tmp_ipsw
-mkdir 11D257
-unzip -d 11D257 ../iPhone3,1_7.1.2_11D257_Restore.ipsw
+
+mkdir $BaseFWBuild
+unzip -j ../"$Identifier"_"$BaseFWVer"_"$BaseFWBuild"_Restore.ipsw "Firmware/all_flash/all_flash."$InternalName".production/*" -d $BaseFWBuild
+
 mkdir $iOSBuild
-unzip -d $iOSBuild iPhone3,1_"$iOSVersion"_Odysseus.ipsw
+unzip -d $iOSBuild "$Identifier"_"$iOSVersion"_Odysseus.ipsw
 
 if [ "$iOSLIST" = "6" ]; then
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/applelogo@2x.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterycharging0@2x.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterycharging1@2x.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batteryfull@2x.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterylow0@2x.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterylow1@2x.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/glyphplugin@2x.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/iBoot.n90ap.RELEASE.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/LLB.n90ap.RELEASE.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/recoverymode@2x~iphone.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/applelogo@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/applelogo@2x.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batterycharging0@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterycharging0@2x.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batterycharging1@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterycharging1@2x.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batteryfull@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batteryfull@2x.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batterylow0@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterylow0@2x.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batterylow1@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterylow1@2x.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/glyphplugin@2x~iphone-30pin.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/glyphplugin@2x.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/iBoot.n90ap.RELEASE.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/iBoot.n90ap.RELEASE.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/LLB.n90ap.RELEASE.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/LLB.n90ap.RELEASE.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/recoverymode@2x~iphone-30pin.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/recoverymode@2x~iphone.s5l8930x.img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/applelogo@2x."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterycharging0@2x."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterycharging1@2x."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batteryfull@2x."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterylow0@2x."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterylow1@2x."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/glyphplugin@2x."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/iBoot."$InternalName".RELEASE.img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/LLB."$InternalName".RELEASE.img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/recoverymode@2x~iphone."$SoC".img3
+mv -v $BaseFWBuild/applelogo@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/applelogo@2x."$SoC".img3
+mv -v $BaseFWBuild/batterycharging0@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterycharging0@2x."$SoC".img3
+mv -v $BaseFWBuild/batterycharging1@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterycharging1@2x."$SoC".img3
+mv -v $BaseFWBuild/batteryfull@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batteryfull@2x."$SoC".img3
+mv -v $BaseFWBuild/batterylow0@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterylow0@2x."$SoC".img3
+mv -v $BaseFWBuild/batterylow1@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterylow1@2x."$SoC".img3
+mv -v $BaseFWBuild/glyphplugin@"$Image"."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/glyphplugin@2x."$SoC".img3
+mv -v $BaseFWBuild/iBoot."$InternalName".RELEASE.img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/iBoot."$InternalName".RELEASE.img3
+mv -v $BaseFWBuild/LLB."$InternalName".RELEASE.img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/LLB."$InternalName".RELEASE.img3
+mv -v $BaseFWBuild/recoverymode@"$Image"."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/recoverymode@2x~iphone."$SoC".img3
 fi
 
 if [ "$iOSLIST" = "7" ]; then
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/applelogo@2x~iphone.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterycharging0@2x~iphone.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterycharging1@2x~iphone.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batteryfull@2x~iphone.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterylow0@2x~iphone.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/batterylow1@2x~iphone.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/glyphplugin@2x~iphone-30pin.s5l8930x.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/iBoot.n90ap.RELEASE.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/LLB.n90ap.RELEASE.img3
-rm $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/recoverymode@2x~iphone-30pin.s5l8930x.img3
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/applelogo@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batterycharging0@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batterycharging1@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batteryfull@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batterylow0@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/batterylow1@2x~iphone.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/glyphplugin@2x~iphone-30pin.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/iBoot.n90ap.RELEASE.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/LLB.n90ap.RELEASE.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
-mv -v 11D257/Firmware/all_flash/all_flash.n90ap.production/recoverymode@2x~iphone-30pin.s5l8930x.img3 $iOSBuild/Firmware/all_flash/all_flash.n90ap.production/
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/applelogo@2x~iphone."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterycharging0@2x~iphone."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterycharging1@2x~iphone."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batteryfull@2x~iphone."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterylow0@2x~iphone."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/batterylow1@2x~iphone."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/glyphplugin@"$Image"."$SoC".img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/iBoot."$InternalName".RELEASE.img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/LLB."$InternalName".RELEASE.img3
+rm $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/recoverymode@"$Image"."$SoC".img3
+mv -v $BaseFWBuild/applelogo@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/batterycharging0@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/batterycharging1@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/batteryfull@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/batterylow0@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/batterylow1@2x~iphone."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/glyphplugin@"$Image"."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/iBoot."$InternalName".RELEASE.img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/LLB."$InternalName".RELEASE.img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
+mv -v $BaseFWBuild/recoverymode@"$Image"."$SoC".img3 $iOSBuild/Firmware/all_flash/all_flash."$InternalName".production/
 fi
 
 ## make ramdisk
@@ -341,13 +361,15 @@ mv $iOSBuild/$RestoreRamdisk $iOSBuild/t.dmg
 ../bin/xpwntool $iOSBuild/ramdisk.dmg $iOSBuild/$RestoreRamdisk -t $iOSBuild/t.dmg
 rm $iOSBuild/ramdisk.dmg
 rm $iOSBuild/t.dmg
-rm -r 11D257
+
+rm -r $BaseFWBuild
 
 ## zipping ipsw
 cd $iOSBuild
-zip ../../iPhone3,1_"$iOSVersion"_Custom.ipsw -r *
+zip ../../"$Identifier"_"$iOSVersion"_Custom.ipsw -r *
 
 ## clean up
 cd ../../
 rm -r tmp_ipsw
 rm -r FirmwareBundles/*
+echo "Done!"
