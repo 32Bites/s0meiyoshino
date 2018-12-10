@@ -1,15 +1,15 @@
 #!/bin/bash
-echo "s0meiyoshino v1.3 restore.sh"
+echo "s0meiyoshino v1.4 b1 restore.sh"
 echo "iPhone3,1 only"
 echo "Select restore iOS version"
-select iOSVer in iPhone3,1_6.0_10A403 iPhone3,1_6.0.1_10A523 iPhone3,1_6.1_10B144 iPhone3,1_6.1.2_10B146 iPhone3,1_6.1.3_10B329 iPhone3,1_7.0_11A465 iPhone3,1_7.0.2_11A501 iPhone3,1_7.0.3_11B511 iPhone3,1_7.0.4_11B554a iPhone3,1_7.0.6_11B651 iPhone3,1_7.1_11D169 iPhone3,1_7.1.1_11D201 exit
+select iOSVer in iPhone3,1_5.1.1_9B206 iPhone3,1_6.0_10A403 iPhone3,1_6.0.1_10A523 iPhone3,1_6.1_10B144 iPhone3,1_6.1.2_10B146 iPhone3,1_6.1.3_10B329 iPhone3,1_7.0_11A465 iPhone3,1_7.0.2_11A501 iPhone3,1_7.0.3_11B511 iPhone3,1_7.0.4_11B554a iPhone3,1_7.0.6_11B651 iPhone3,1_7.1_11D169 iPhone3,1_7.1.1_11D201 exit
 do
 
-## if [ "$iOSVer" = "iPhone3,1_5.1.1_9B208" ]; then
-## iOSVersion="5.1.1"
-## iOS_IPSW="iPhone3,1_5.1.1_9B208"
-## break
-## fi
+if [ "$iOSVer" = "iPhone3,1_5.1.1_9B206" ]; then
+iOSVersion="5.1.1"
+iOS_IPSW="iPhone3,1_5.1.1_9B206"
+break
+fi
 
 if [ "$iOSVer" = "iPhone3,1_6.0_10A403" ]; then
 iOSVersion="6.0"

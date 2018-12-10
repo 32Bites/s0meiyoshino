@@ -1,11 +1,13 @@
-<h2>s0meiyoshino v1.3</h2>
-It is a downgrade and untethered jailbreak tool to iOS 6 and iOS 7 that exploited the boot chain of iOS 7.1.2 using @xerub's De Rebus Antiquis.<br/>
+<h2>s0meiyoshino v1.4 b1</h2>
+It is a downgrade and untethered jailbreak tool to iOS 5.1.1, iOS 6 and iOS 7 that exploited the boot chain of iOS 7.1.2 using @xerub's De Rebus Antiquis.<br/>
+Operation confirmed with OS X 10.10.5 and MacOS 10.13.5</br>
 Please secure about 10 GB of free space.<br/>
 <br/>
-*Support for untethered downgrade to iOS 6.0-7.1.1 (without shsh)<br/>
-*Support for untethered jailbreak to iOS 6.0-7.1.1<br/>
-Apple File Connection v2 is not included in iOS 7.1.x Jailbreak. <br/>
-So, please install from Cydia.<br/>
+*Support for untethered downgrade to iOS 5.1.1-7.1.1 (without shsh)<br/>
+*Support for untethered jailbreak to iOS 7.0-7.1.1<br/>
+**Apple File Connection v2 is not included in iOS 7.1.x Jailbreak. <br/>
+**So, please install from Cydia.<br/>
+!!Jailbreaks below iOS 6 have been deleted. You can untethered jailbreak by install untether from Cydia after tethered jailbreak by redsn0w.</br>
 <br/>
 (1) Download IPSW<br/>
 <a href="https://ipsw.me">ipsw download (https://ipsw.me)</a><br/>
@@ -24,7 +26,7 @@ First, put in device DFU mode.<br/>
 Then, execute the following.<br/>
 ./restore.sh<br/>
 
-### How to delete exploit ###<br/>
+<h3>How to delete exploit</h3><br/>
 This method adds "boot-partition=2" to the nvram variable.<br/>
 Even if you restore it with OFW in iTunes, it will be in recovery mode as it is.<br/>
 
@@ -53,7 +55,6 @@ Roderick W. Smith - for gptfdisk<br/>
 @ShadowLee19 for iBoot patch<br/>
 @JonathanSeals for many tips<br/>
 @Benfxmth for many tips<br/>
-iPhone Dev-Team for iOS 6 jailbreak patch<br/>
 @winocm for opensn0w jailbreak patch<br/>
 @daytonhasty for <a href="https://dayt0n.com/articles/Odysseus/">Odysseus</a><br/>
 @libimobiledev for idevicerestore<br/>

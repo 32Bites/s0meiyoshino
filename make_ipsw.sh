@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "s0meiyoshino v1.3.1 make_ipsw.sh"
+echo "s0meiyoshino v1.4 b1 make_ipsw.sh"
 
 echo "iPhone3,1 only"
 Identifier="iPhone3,1"
@@ -13,26 +13,26 @@ fi
 
 echo "Select downgeade iOS version"
 
-select iOSVer in "iOS 6" "iOS 7" exit
+select iOSVer in "iOS 5" "iOS 6" "iOS 7" exit
 do
-## if [ "$iOSVer" = "iOS 5" ]; then
-## iOSLIST="6"
-## echo "Select iOS 5.x"
-## select iOSVers in "iOS 5.1.1r"
-## do
-## if [ "$iOSVers" = "iOS 5.1.1r" ]; then
-## ### Patching iBoot-1219.62.15~2
-## iOSVersion="5.1.1_9B208"
-## iOSBuild="9B208"
-## RestoreRamdisk="038-5512-003.dmg"
-## iBoot_Key="6377d34deddf26c9b464f927f18b222be75f1b5547e537742e7dfca305660fea"
-## iBoot_IV="71fe96da25812ff341181ba43546ea4f"
-## Boot_Partition_Patch="000081a: 00200020"
-## break
-## fi
-## done
-## break
-## fi
+if [ "$iOSVer" = "iOS 5" ]; then
+iOSLIST="6"
+echo "Select iOS 5.x"
+select iOSVers in "iOS 5.1.1"
+do
+if [ "$iOSVers" = "iOS 5.1.1" ]; then
+### Patching iBoot-1219.62.15~2
+iOSVersion="5.1.1_9B206"
+iOSBuild="9B206"
+RestoreRamdisk="038-4361-021.dmg"
+iBoot_Key="e8e26976984e83f967b16bdb3a65a3ec45003cdf2aaf8d541104c26797484138"
+iBoot_IV="b1846de299191186ce3bbb22432eca12"
+Boot_Partition_Patch="000081a: 00200020"
+break
+fi
+done
+break
+fi
 if [ "$iOSVer" = "iOS 6" ]; then
 iOSLIST="6"
 echo "Select iOS 6.x"
@@ -193,6 +193,7 @@ rm -r tmp_ipsw
 rm -r FirmwareBundles/*
 fi
 echo ""
+if [ "$iOSLIST" = "7" ]; then
 echo "Jailbreak?"
 select Jailbreak in Yes No
 do
@@ -207,7 +208,10 @@ cp -a Bundles/Down_"$Identifier"_"$iOSVersion".bundle FirmwareBundles/
 break
 fi
 done
-
+else
+JB="disable"
+cp -a Bundles/Down_"$Identifier"_"$iOSVersion".bundle FirmwareBundles/
+fi
 mkdir tmp_ipsw
 cd tmp_ipsw
 unzip -j ../"$Identifier"_"$iOSVersion"_Restore.ipsw "Firmware/all_flash/all_flash."$InternalName".production/iBoot."$InternalName".RELEASE.img3"
@@ -256,9 +260,6 @@ tar -cvf bootloader.tar iBEC
 cd ../
 ### Make custom ipsw by odysseus
 if [ "$JB" = "enable" ]; then
-if [ "$iOSLIST" = "6" ]; then
-./bin/ipsw "$Identifier"_"$iOSVersion"_Restore.ipsw tmp_ipsw/"$Identifier"_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar src/Cydia.tar
-fi
 if [ "$iOSLIST" = "7" ]; then
 ./bin/ipsw "$Identifier"_"$iOSVersion"_Restore.ipsw tmp_ipsw/"$Identifier"_"$iOSVersion"_Odysseus.ipsw -memory -ramdiskgrow 2000 tmp_ipsw/bootloader.tar src/Cydia7.tar
 fi
@@ -332,29 +333,35 @@ mv -v $BaseFWBuild/recoverymode@"$Image"."$SoC".img3 $iOSBuild/Firmware/all_flas
 fi
 
 ## make ramdisk
-umount /Volumes/ramdisk
 ../bin/xpwntool $iOSBuild/$RestoreRamdisk $iOSBuild/ramdisk.dmg
-MountRamdisk="$((hdiutil mount $iOSBuild/ramdisk.dmg) | sed -n -e 's/^.* //p')"
+if [ -e ""$iOSBuild"/ramdisk.dmg" ]; then
+echo "OK"
+else
+echo "failed"
+exit
+fi
+## attach ramdisk ##
+hdiutil attach -mountpoint ramdisk/ $iOSBuild/ramdisk.dmg
 sleep 1s
 
-tar -xvf ../src/bin.tar -C $MountRamdisk/ --preserve-permissions
-mv -v $MountRamdisk/sbin/reboot $MountRamdisk/sbin/reboot_
-cp -a -v ../src/partition.sh $MountRamdisk/sbin/reboot
-cp -a -v ../src/ramdiskH.dmg $MountRamdisk/
-chmod 755 $MountRamdisk/sbin/reboot
+tar -xvf ../src/bin.tar -C ramdisk/ --preserve-permissions
+mv -v ramdisk/sbin/reboot ramdisk/sbin/reboot_
+cp -a -v ../src/partition.sh ramdisk/sbin/reboot
+cp -a -v ../src/ramdiskH.dmg ramdisk/
+chmod 755 ramdisk/sbin/reboot
 
 if [ "$iOSLIST" = "6" ]; then
-mv -v $MountRamdisk/usr/share/progressui/images-2x/applelogo.png $MountRamdisk/usr/share/progressui/images-2x/applelogo_orig.png
-bspatch $MountRamdisk/usr/share/progressui/images-2x/applelogo_orig.png $MountRamdisk/usr/share/progressui/images-2x/applelogo.png ../patch/applelogo.patch
+mv -v ramdisk/usr/share/progressui/images-2x/applelogo.png ramdisk/usr/share/progressui/images-2x/applelogo_orig.png
+bspatch ramdisk/usr/share/progressui/images-2x/applelogo_orig.png ramdisk/usr/share/progressui/images-2x/applelogo.png ../patch/applelogo.patch
 fi
 
 if [ "$iOSLIST" = "7" ]; then
-mv -v $MountRamdisk/usr/share/progressui/applelogo@2x.tga $MountRamdisk/usr/share/progressui/applelogo_orig.tga
-bspatch $MountRamdisk/usr/share/progressui/applelogo_orig.tga $MountRamdisk/usr/share/progressui/applelogo@2x.tga ../patch/applelogo7.patch
+mv -v ramdisk/usr/share/progressui/applelogo@2x.tga ramdisk/usr/share/progressui/applelogo_orig.tga
+bspatch ramdisk/usr/share/progressui/applelogo_orig.tga ramdisk/usr/share/progressui/applelogo@2x.tga ../patch/applelogo7.patch
 fi
 sleep 1s
 
-umount $MountRamdisk
+hdiutil detach ramdisk/
 sleep 1s
 
 mv $iOSBuild/$RestoreRamdisk $iOSBuild/t.dmg
@@ -366,7 +373,7 @@ rm -r $BaseFWBuild
 
 ## zipping ipsw
 cd $iOSBuild
-zip ../../"$Identifier"_"$iOSVersion"_Custom.ipsw -r *
+zip ../../"$Identifier"_"$iOSVersion"_Custom.ipsw -r0 *
 
 ## clean up
 cd ../../
