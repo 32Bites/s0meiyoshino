@@ -61,3 +61,6 @@ Roderick W. Smith - for gptfdisk<br/>
 @planetbeing for xpwn<br/>
 @axi0mX for <a href="https://github.com/axi0mX/ipwndfu">ipwndfu</a><br/>
 @posixninja and @pod2g for SHAtter exploit<br/>
+<br/>
+<h3>To a specific tool creator</h3>
+Your tool needs to display my tool as credit and link.<br/>
